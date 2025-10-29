@@ -14,13 +14,13 @@ OpenTelemetry-based SDK for agent observability and control.
 
 ```bash
 # Install with Poetry
-poetry add value-control-sdk
+poetry add value-python
 
 # Or with pip
-pip install value-control-sdk
+pip install value-python
 
 # With optional instrumentation libraries
-poetry add value-control-sdk -E instrumentation
+poetry add value-python -E instrumentation
 ```
 
 ## Quick Start
@@ -36,7 +36,7 @@ sdk = AsyncValueSDK()
 autoinstrument(libraries=["langchain", "gemini"])
 
 # Use agent context decorator
-@agent_context(agent_task_name="agetn-task-name")
+@agent_context(agent_task_name="agent-task-name")
 async def process_query(query: str):
     # Create custom action
     with sdk.actions.start("summarize", {"query": query}) as span:
