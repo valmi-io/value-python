@@ -121,3 +121,23 @@ class ValueSDK:
             agent_name=self.agent_name,
         )
         self.actions = ActionEmitter(tracer=self._tracer)
+
+
+def initialize_sdk_sync(service_name: str = "value-control-agent") -> ValueSDK:
+    """
+    Initialize and return a configured synchronous ValueSDK instance.
+    Reads configuration from environment variables.
+    """
+    sdk = ValueSDK(service_name=service_name)
+    sdk.initialize()
+    return sdk
+
+
+async def initialize_sdk_async(service_name: str = "value-control-agent") -> AsyncValueSDK:
+    """
+    Initialize and return a configured asynchronous AsyncValueSDK instance.
+    Reads configuration from environment variables.
+    """
+    sdk = AsyncValueSDK(service_name=service_name)
+    await sdk.initialize()
+    return sdk

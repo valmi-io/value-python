@@ -9,22 +9,16 @@ load_dotenv()
 Agentic workflow example using LangChain to test auto-instrumentation and action traces.
 """
 
-from value.instrumentation import autoinstrument
-from value import ValueSDK
-
+from value.instrumentation import auto_instrument
+from value import initialize_sdk_sync
 from google import genai
 
 
-# Dummy tool for demonstration
-
-
 # Setup ValueSDK for context enrichment
-sdk = ValueSDK()
-sdk.initialize()
-
+sdk = initialize_sdk_sync()
 
 # Auto-instrumentation setup
-autoinstrument(["gemini"])
+auto_instrument(["gemini"])
 
 api_key = os.getenv("GOOGLE_API_KEY", "your-gemini-api-key-here")
 print(api_key)

@@ -10,7 +10,7 @@ SUPPORTED_LIBRARIES = {
 }
 
 
-def autoinstrument(libraries: Optional[List[str]] = None) -> None:
+def auto_instrument(libraries: Optional[List[str]] = None) -> None:
     """
     Enable auto-instrumentation for supported libraries.
 

@@ -6,13 +6,12 @@ import os
 load_dotenv()
 
 import time
-from value import ValueSDK, agent_context
+from value import initialize_sdk_sync, agent_context
 
 
 def main() -> None:
     # Initialize SDK (sync version)
-    sdk = ValueSDK()
-    sdk.initialize()
+    sdk = initialize_sdk_sync()
 
     # Define agent workflow with context
     @agent_context(agent_task_name="sync-agent")

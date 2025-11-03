@@ -1,18 +1,16 @@
 """Async example demonstrating the Value SDK usage."""
 
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
 import asyncio
-from value import AsyncValueSDK, agent_context
+from value import initialize_sdk_async, agent_context
 
 
 async def main() -> None:
     # Initialize SDK (async version)
-    sdk = AsyncValueSDK()
-    await sdk.initialize()
+    sdk = await initialize_sdk_async()
 
     # Define agent workflow with context
     @agent_context(agent_task_name="async-agent")

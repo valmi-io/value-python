@@ -2,15 +2,13 @@
 
 import functools
 import asyncio
-from opentelemetry import trace
-from typing import TYPE_CHECKING, Callable, Any
 import contextvars
+
+from opentelemetry import trace
+from typing import Callable, Any
 
 # Context variable for agent task name
 agent_task_name_var = contextvars.ContextVar("agent_task_name", default=None)
-
-if TYPE_CHECKING:
-    from .client import AsyncValueSDK, ValueSDK
 
 
 def agent_context(agent_task_name: str = "unknown") -> Callable:
