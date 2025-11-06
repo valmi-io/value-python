@@ -3,13 +3,13 @@
 from typing import Optional
 from opentelemetry import trace
 
-from .tracing import initialize_tracing
-from .actions import ActionEmitter
-from ._api import ValueControlPlaneAPI, SyncValueControlPlaneAPI
-from .config import load_config_from_env
+from .internal.tracing import initialize_tracing
+from .internal.actions import ActionEmitter
+from .internal._api import ValueControlPlaneAPI, SyncValueControlPlaneAPI
+from .internal.config import load_config_from_env
 
 
-class AsyncValueSDK:
+class AsyncValueClient:
     """Asynchronous client for the Value Control SDK."""
 
     def __init__(
@@ -66,7 +66,7 @@ class AsyncValueSDK:
         self.actions = ActionEmitter(tracer=self._tracer)
 
 
-class ValueSDK:
+class ValueClient:
     """Synchronous client for the Value Control SDK."""
 
     def __init__(
@@ -123,21 +123,21 @@ class ValueSDK:
         self.actions = ActionEmitter(tracer=self._tracer)
 
 
-def initialize_sdk_sync(service_name: str = "value-control-agent") -> ValueSDK:
+def initialize_sync(service_name: str = "value-control-agent") -> ValueClient:
     """
-    Initialize and return a configured synchronous ValueSDK instance.
+    Initialize and return a configured synchronous ValueClient instance.
     Reads configuration from environment variables.
     """
-    sdk = ValueSDK(service_name=service_name)
-    sdk.initialize()
-    return sdk
+    client = ValueClient(service_name=service_name)
+    client.initialize()
+    return client
 
 
-async def initialize_sdk_async(service_name: str = "value-control-agent") -> AsyncValueSDK:
+async def initialize_async(service_name: str = "value-control-agent") -> AsyncValueClient:
     """
-    Initialize and return a configured asynchronous AsyncValueSDK instance.
+    Initialize and return a configured asynchronous AsyncValueClient instance.
     Reads configuration from environment variables.
     """
-    sdk = AsyncValueSDK(service_name=service_name)
-    await sdk.initialize()
-    return sdk
+    client = AsyncValueClient(service_name=service_name)
+    await client.initialize()
+    return client

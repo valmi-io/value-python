@@ -10,12 +10,12 @@ Agentic workflow example using LangChain to test auto-instrumentation and action
 """
 
 from value.instrumentation import auto_instrument
-from value import initialize_sdk_sync
+from value import initialize_sync
 from google import genai
 
 
-# Setup ValueSDK for context enrichment
-sdk = initialize_sdk_sync()
+# Setup ValueClient for context enrichment
+client = initialize_sync()
 
 # Auto-instrumentation setup
 auto_instrument(["gemini"])

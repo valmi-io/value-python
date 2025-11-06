@@ -5,21 +5,20 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import asyncio
-from value import initialize_sdk_async, agent_context
+from value import initialize_async
 
 
 async def main() -> None:
     # Initialize SDK (async version)
-    sdk = await initialize_sdk_async()
+    client = await initialize_async()
 
-    # Define agent workflow with context
-    @agent_context(agent_task_name="async-agent")
+    # Define agent workflow
     async def process_data(data: str) -> str:
         """Process data with tracing."""
         print(f"Processing data: {data}")
 
         # Create a custom action
-        with sdk.actions.start(
+        with client.actions.start(
             action_name="transform_data",
             attributes={"data_length": len(data)},
         ) as action_span:

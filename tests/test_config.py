@@ -1,7 +1,7 @@
 """Tests for configuration."""
 
 import pytest
-from value.config import SDKConfig
+from value.internal.config import SDKConfig
 
 
 def test_config_requires_secret() -> None:

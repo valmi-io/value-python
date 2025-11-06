@@ -1,15 +1,13 @@
 """Value Control SDK for OpenTelemetry-based agent observability."""
 
-from .client import AsyncValueSDK, ValueSDK, initialize_sdk_async, initialize_sdk_sync
-from .decorators import agent_context
+from .client import AsyncValueClient, ValueClient, initialize_async, initialize_sync
 from .instrumentation import auto_instrument
 
 __version__ = "0.1.0"
 __all__ = [
-    "ValueSDK",
-    "AsyncValueSDK",
-    "agent_context",
+    "ValueClient",
+    "AsyncValueClient",
     "auto_instrument",
-    "initialize_sdk_async",
-    "initialize_sdk_sync",
+    "initialize_async",
+    "initialize_sync",
 ]

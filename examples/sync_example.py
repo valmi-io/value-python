@@ -6,21 +6,20 @@ import os
 load_dotenv()
 
 import time
-from value import initialize_sdk_sync, agent_context
+from value import initialize_sync
 
 
 def main() -> None:
     # Initialize SDK (sync version)
-    sdk = initialize_sdk_sync()
+    client = initialize_sync()
 
-    # Define agent workflow with context
-    @agent_context(agent_task_name="sync-agent")
+    # Define agent workflow
     def process_data(data: str) -> str:
         """Process data with tracing."""
         print(f"Processing data: {data}")
 
         # Create a custom action
-        with sdk.actions.start(
+        with client.actions.start(
             action_name="transform_data",
             attributes={"data_length": len(data)},
         ) as action_span:
