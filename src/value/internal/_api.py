@@ -40,7 +40,7 @@ class ValueControlPlaneAPI:
         """
         async with httpx.AsyncClient(timeout=self.timeout) as client:
             response = await client.get(
-                f"{self.base_url}/api/v1/agent/info",
+                f"{self.base_url}/api/v1/agent_instance/info",
                 headers=self._headers,
             )
             response.raise_for_status()
@@ -83,7 +83,7 @@ class SyncValueControlPlaneAPI:
         """
         with httpx.Client(timeout=self.timeout) as client:
             response = client.get(
-                f"{self.base_url}/api/v1/agent/info",
+                f"{self.base_url}/api/v1/agent_instance/info",
                 headers=self._headers,
             )
             response.raise_for_status()

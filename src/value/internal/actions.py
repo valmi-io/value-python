@@ -17,6 +17,21 @@ class ActionEmitter:
         """
         self._tracer = tracer
 
+    def send(self, action_name: str, attributes: Optional[Dict[str, Any]] = None) -> None:
+        """
+        Send an action immediately as an OpenTelemetry span.
+
+        Creates a span, adds attributes, and immediately ends it (sends it).
+
+        Args:
+            action_name: Name of the action
+            attributes: Optional dict of attributes to attach to the span
+        """
+        enriched_attributes = dict(attributes or {})
+        with self._tracer.start_as_current_span(name=action_name, attributes=enriched_attributes):
+            # Span is automatically ended when exiting the context, which sends it
+            pass
+
     @contextmanager
     def start(self, action_name: str, attributes: Optional[Dict[str, Any]] = None):
         """
