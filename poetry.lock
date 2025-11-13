@@ -1289,21 +1289,6 @@ pytest = ">=7"
 testing = ["process-tests", "pytest-xdist", "virtualenv"]
 
 [[package]]
-name = "python-dotenv"
-version = "1.2.1"
-description = "Read key-value pairs from a .env file and set them as environment variables"
-optional = false
-python-versions = ">=3.9"
-groups = ["main"]
-files = [
-    {file = "python_dotenv-1.2.1-py3-none-any.whl", hash = "sha256:b81ee9561e9ca4004139c6cbba3a238c32b03e4894671e181b671e8cb8425d61"},
-    {file = "python_dotenv-1.2.1.tar.gz", hash = "sha256:42667e897e16ab0d66954af0e60a9caa94f0fd4ecf3aaf6d2d260eec1aa36ad6"},
-]
-
-[package.extras]
-cli = ["click (>=5.0)"]
-
-[[package]]
 name = "pytokens"
 version = "0.2.0"
 description = "A Fast, spec compliant Python 3.13+ tokenizer that runs on older Pythons."
@@ -1712,4 +1697,4 @@ instrumentation = ["google-genai", "opentelemetry-instrumentation-google-generat
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<3.14"
-content-hash = "43d81eb6aedb73b9bd257a73c2b74f3135fb32359440b2cbc9ad34fa9d60affd"
+content-hash = "006182ecd420ba2cf8deeb8b38e02c33333b3e642c7140fc80ce39c651422276"

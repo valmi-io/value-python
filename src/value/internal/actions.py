@@ -1,5 +1,6 @@
 """Action emitter for creating custom OpenTelemetry spans."""
 
+import warnings
 from typing import Optional, Dict, Any
 from contextlib import contextmanager
 from opentelemetry import trace
@@ -28,7 +29,14 @@ class ActionEmitter:
             attributes: Optional dict of attributes to attach to the span
         """
         enriched_attributes = dict(attributes or {})
-        with self._tracer.start_as_current_span(name=action_name, attributes=enriched_attributes):
+        action_name_key = "valmi.value.action.name"
+        if action_name_key in enriched_attributes:
+            warnings.warn(
+                f"Attribute key '{action_name_key}' already exists in attributes. "
+                f"Its value will be replaced by the given action_name '{action_name}'."
+            )
+        enriched_attributes[action_name_key] = action_name
+        with self._tracer.start_as_current_span(name="valmi.value.action", attributes=enriched_attributes):
             # Span is automatically ended when exiting the context, which sends it
             pass
 
@@ -47,5 +55,12 @@ class ActionEmitter:
             The active span object
         """
         enriched_attributes = dict(attributes or {})
-        with self._tracer.start_as_current_span(name=action_name, attributes=enriched_attributes) as span:
+        action_name_key = "valmi.value.action.name"
+        if action_name_key in enriched_attributes:
+            warnings.warn(
+                f"Attribute key '{action_name_key}' already exists in attributes. "
+                f"Its value will be replaced by the given action_name '{action_name}'."
+            )
+        enriched_attributes[action_name_key] = action_name
+        with self._tracer.start_as_current_span(name="valmi.value.action", attributes=enriched_attributes) as span:
             yield span
