@@ -22,12 +22,12 @@ async def main():
 
     async def process_data(data: str) -> str:
         print(f"Processing data: {data}")
-        with client.actions.start("transform_data", {"data_length": len(data)}) as span:
-            span.add_event("Start transformation")
-            await asyncio.sleep(0.5)
-            result = data.upper()
-            span.set_attribute("result_length", len(result))
-            span.add_event("Transformation complete")
+        await asyncio.sleep(0.5)
+        result = data.upper()
+        client.actions.send(
+            "transform_data",
+            {"value.action.description": f"Transformed data from {len(data)} to {len(result)} characters"}
+        )
         return result
 
     result = await process_data("hello async world")
