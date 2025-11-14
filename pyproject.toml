@@ -15,6 +15,7 @@ httpx = ">=0.24.0"
 opentelemetry-instrumentation-langchain = { version = "^0.47.5", optional = true }
 opentelemetry-instrumentation-google-generativeai = { version = "^0.47.5", optional = true }
 opentelemetry-instrumentation = "^0.59b0"
+google-genai = { version = "*", optional = true }
 
 
 [tool.poetry.group.dev.dependencies]
@@ -33,6 +34,7 @@ build-backend = "poetry.core.masonry.api"
 instrumentation = [
     "opentelemetry-instrumentation-langchain",
     "opentelemetry-instrumentation-google-generativeai",
+    "google-genai",
 ]
 
 [tool.black]

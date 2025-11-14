@@ -29,3 +29,20 @@ def load_config_from_env() -> SDKConfig:
         service_name=os.getenv("VALUE_SERVICE_NAME", "value-control-agent"),
         enable_console_export=os.getenv("VALUE_CONSOLE_EXPORT", "false").lower() == "true",
     )
+
+ALLOWED_ACTION_ATTRIBUTES = [
+    "value.action.name",
+    "value.action.description",
+    "value.action.type",
+    "value.action.status",
+    "value.action.error",
+    "value.action.duration",
+    "value.action.start_time",
+    "value.action.end_time",
+    "value.action.llm.model",
+    "value.action.llm.input_tokens",
+    "value.action.llm.output_tokens",
+    "value.action.llm.total_tokens",
+    "value.action.llm.prompt",
+    "value.action.llm.response",
+]

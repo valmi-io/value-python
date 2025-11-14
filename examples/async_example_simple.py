@@ -1,4 +1,4 @@
-"""Async example demonstrating the Value SDK usage."""
+"""Async example demonstrating the Value SDK usage with Direct send action without start / add_events."""
 
 from dotenv import load_dotenv
 
@@ -21,11 +21,12 @@ async def main() -> None:
         await asyncio.sleep(0.5)
         result = data.upper()
 
-        # Send a custom action with all attributes upfront
+        # Send action with name and parameters (simplified API)
         client.actions.send(
             action_name="transform_data",
             attributes={
-                "value.action.description": f"Transformed data from {len(data)} to {len(result)} characters"
+                "data_length": len(data),
+                "result_length": len(result),
             },
         )
 
@@ -41,9 +42,12 @@ async def main() -> None:
 
 if __name__ == "__main__":
     print("=" * 50)
-    print("Value SDK Async Example")
+    print("Value SDK Async Example (Simplified)")
     print("=" * 50)
+    print("\nThis example uses the simplified send() API:")
+    print("  client.actions.send(action_name, attributes)")
     print("\nNote: Make sure you have an OpenTelemetry collector running:")
     print("  docker run -p 4317:4317 otel/opentelemetry-collector:latest\n")
 
     asyncio.run(main())
+
