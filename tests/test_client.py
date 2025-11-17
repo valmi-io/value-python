@@ -4,11 +4,13 @@ import pytest
 from value import AsyncValueClient, ValueClient
 
 
-def test_async_sdk_initialization() -> None:
+@pytest.mark.asyncio
+async def test_async_sdk_initialization() -> None:
     """Test async SDK client initialization."""
     sdk = AsyncValueClient(secret="test-secret")
     assert sdk.secret == "test-secret"
-    assert sdk.actions is not None
+    await sdk.initialize()
+    assert sdk.actions_emitter is not None
     assert sdk.tracer is not None
 
 
@@ -16,7 +18,8 @@ def test_sync_sdk_initialization() -> None:
     """Test sync SDK client initialization."""
     sdk = ValueClient(secret="test-secret")
     assert sdk.secret == "test-secret"
-    assert sdk.actions is not None
+    sdk.initialize()
+    assert sdk.actions_emitter is not None
     assert sdk.tracer is not None
 
 
@@ -41,7 +44,16 @@ def test_custom_endpoints() -> None:
 async def test_action_emitter() -> None:
     """Test custom action creation."""
     sdk = AsyncValueClient(secret="test-secret")
+    await sdk.initialize()
 
-    with sdk.actions.start("test_action", {"test_attr": "value"}) as span:
-        span.add_event("Test event")
-        assert span.is_recording()
+    # Test sending action without context
+    sdk.action().send(
+        action_name="test_action",
+        user_id="user123",
+        anonymous_id="anon456",
+        **{"value.action.description": "Test action"}
+    )
+
+    # Test sending action within context
+    with sdk.action_span(user_id="user123", anonymous_id="anon456") as action_span:
+        action_span.send(action_name="test_action_2", **{"value.action.description": "Test action 2"})

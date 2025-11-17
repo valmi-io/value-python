@@ -9,33 +9,32 @@ from value import initialize_async
 
 
 async def main() -> None:
-    # Initialize SDK (async version)
     client = await initialize_async()
 
-    # Define agent workflow
     async def process_data(data: str) -> str:
         """Process data with tracing."""
         print(f"Processing data: {data}")
 
-        # Process data
         await asyncio.sleep(0.5)
         result = data.upper()
 
-        # Send a custom action with all attributes upfront
-        client.actions.send(
-            action_name="transform_data",
-            attributes={
-                "value.action.description": f"Transformed data from {len(data)} to {len(result)} characters"
-            },
-        )
+        with client.action_span(user_id="user123", anonymous_id="anon456") as action_span:
+            action_span.send(
+                action_name="transform_data",
+                **{
+                    "value.action.description": f"Transformed data from {len(data)} to {len(result)} characters",
+                    "input_text": data,
+                    "output_text": result,
+                    "operation": "uppercase_transform",
+                    "processing_time_ms": 500,
+                },
+            )
 
         return result
 
-    # Run the workflow
     result = await process_data("hello async world")
     print(f"Result: {result}")
 
-    # Allow time for spans to be exported
     await asyncio.sleep(2)
 
 

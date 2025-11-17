@@ -5,15 +5,14 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.sdk.resources import Resource
+from .span_processor import UserContextSpanProcessor
 
 
 def initialize_tracing(
     endpoint: str,
     service_name: str = "value-control-agent",
     console_export: bool = False,
-    workspace_id: str = None,
-    organization_id: str = None,
-    agent_name: str = None,
+    attributes: dict = None,
 ) -> trace.Tracer:
     """
     Initialize the OpenTelemetry tracer provider, processor, and exporter.
@@ -32,14 +31,16 @@ def initialize_tracing(
             "service.name": service_name,
             "service.version": "0.1.0",
             "value.client.sdk": "value-python",
-            "value.agent.organization_id": organization_id or "unknown",
-            "value.agent.workspace_id": workspace_id or "unknown",
-            "value.agent.name": agent_name or "unknown",
+            **attributes,
         }
     )
 
     # Create tracer provider
     provider = TracerProvider(resource=resource)
+
+    # Add user context span processor (must be first to run on all spans)
+    user_context_processor = UserContextSpanProcessor()
+    provider.add_span_processor(user_context_processor)
 
     # Create and add OTLP exporter
     otlp_exporter = OTLPSpanExporter(endpoint=endpoint, insecure=True)
@@ -56,4 +57,4 @@ def initialize_tracing(
     trace.set_tracer_provider(provider)
 
     # Return tracer instance
-    return trace.get_tracer("value.sdk")
+    return trace.get_tracer(service_name)

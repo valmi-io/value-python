@@ -10,32 +10,31 @@ from value import initialize_sync
 
 
 def main() -> None:
-    # Initialize SDK (sync version)
     client = initialize_sync()
 
-    # Define agent workflow
     def process_data(data: str) -> str:
         """Process data with tracing."""
         print(f"Processing data: {data}")
 
-        # Process data
         result = data.upper()
 
-        # Send a custom action with all attributes upfront
-        client.actions.send(
-            action_name="transform_data",
-            attributes={
-                "value.action.description": f"Transformed data from {len(data)} to {len(result)} characters"
-            },
-        )
+        with client.action_span(user_id="user123", anonymous_id="anon456") as action_span:
+            action_span.send(
+                action_name="transform_data",
+                **{
+                    "value.action.description": f"Transformed data from {len(data)} to {len(result)} characters",
+                    "original_text": data,
+                    "transformed_text": result,
+                    "method": "uppercase",
+                    "is_cached": False,
+                },
+            )
 
         return result
 
-    # Run the workflow
     result = process_data("hello world")
     print(f"Result: {result}")
 
-    # Allow time for spans to be exported
     time.sleep(2)
 
 

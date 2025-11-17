@@ -1,10 +1,10 @@
 """SDK client implementations."""
 
-from typing import Optional
+from typing import Optional, Any
 from opentelemetry import trace
 
 from .internal.tracing import initialize_tracing
-from .internal.actions import ActionEmitter
+from .internal.actions import ActionEmitter, ActionSpan
 from .internal._api import ValueControlPlaneAPI, SyncValueControlPlaneAPI
 from .internal.config import load_config_from_env
 
@@ -33,10 +33,10 @@ class AsyncValueClient:
         self.organization_id = None
         self.workspace_id = None
         self.agent_name = None
-
-        # Tracer and actions will be initialized in initialize()
+        self.agent_id = None
+        self.value_attributes = {}
         self._tracer = None
-        self.actions = None
+        self.actions_emitter = None
 
     @property
     def api_client(self) -> ValueControlPlaneAPI:
@@ -46,24 +46,39 @@ class AsyncValueClient:
     def tracer(self) -> Optional[trace.Tracer]:
         return self._tracer
 
+    def action_span(self, user_id: Optional[str] = None, anonymous_id: Optional[str] = None, **kwargs: Any) -> Any:
+        """
+        Create an action span context.
+        """
+        return ActionSpan(emitter=self.actions_emitter, user_id=user_id, anonymous_id=anonymous_id, **kwargs)
+
+    def action(self) -> ActionEmitter:
+        return self.actions_emitter
+
     async def initialize(self):
         """
-        Initialize tracer, actions, and fetch agent context (organization, workspace, agent name) from backend.
+        Initialize tracer, actions_emitter, and fetch agent context (organization, workspace, agent name) from backend.
         """
-        agent_info = await self._api_client.get_agent_info()
+        # agent_info = await self._api_client.get_agent_info()
+        agent_info = {}
         self.organization_id = agent_info.get("organization_id", "unknown")
         self.workspace_id = agent_info.get("workspace_id", "unknown")
         self.agent_name = agent_info.get("name", "unknown")
+        self.agent_id = agent_info.get("agent_id", "unknown")
+        self.value_attributes = {
+            "value.agent.organization_id": self.organization_id,
+            "value.agent.workspace_id": self.workspace_id,
+            "value.agent.name": self.agent_name,
+            "value.agent.id": self.agent_id,
+        }
 
         self._tracer = initialize_tracing(
             endpoint=self._otel_endpoint,
             service_name=self._service_name,
             console_export=self._enable_console_export,
-            workspace_id=self.workspace_id,
-            organization_id=self.organization_id,
-            agent_name=self.agent_name,
+            attributes=self.value_attributes,
         )
-        self.actions = ActionEmitter(tracer=self._tracer)
+        self.actions_emitter = ActionEmitter(tracer=self._tracer)
 
 
 class ValueClient:
@@ -90,10 +105,10 @@ class ValueClient:
         self.organization_id = None
         self.workspace_id = None
         self.agent_name = None
-
-        # Tracer and actions will be initialized in initialize()
+        self.agent_id = None
+        self.value_attributes = {}
         self._tracer = None
-        self.actions = None
+        self.actions_emitter = None
 
     @property
     def api_client(self) -> SyncValueControlPlaneAPI:
@@ -103,24 +118,40 @@ class ValueClient:
     def tracer(self) -> Optional[trace.Tracer]:
         return self._tracer
 
+    def action_span(self, user_id: Optional[str] = None, anonymous_id: Optional[str] = None, **kwargs: Any) -> Any:
+        """
+        Create an action span context.
+        """
+        return ActionSpan(emitter=self.actions_emitter, user_id=user_id, anonymous_id=anonymous_id, **kwargs)
+
+    def action(self) -> ActionEmitter:
+        return self.actions_emitter
+
     def initialize(self):
         """
-        Initialize tracer, actions, and fetch agent context (organization, workspace, agent name) from backend.
+        Initialize tracer, actions_emitter, and fetch agent context (organization, workspace, agent name) from backend.
         """
-        agent_info = self._api_client.get_agent_info()
+        # agent_info = self._api_client.get_agent_info()
+        agent_info = {}
         self.organization_id = agent_info.get("organization_id", "unknown")
         self.workspace_id = agent_info.get("workspace_id", "unknown")
         self.agent_name = agent_info.get("name", "unknown")
+        self.agent_id = agent_info.get("agent_id", "unknown")
+
+        self.value_attributes = {
+            "value.agent.organization_id": self.organization_id,
+            "value.agent.workspace_id": self.workspace_id,
+            "value.agent.name": self.agent_name,
+            "value.agent.id": self.agent_id,
+        }
 
         self._tracer = initialize_tracing(
             endpoint=self._otel_endpoint,
             service_name=self._service_name,
             console_export=self._enable_console_export,
-            organization_id=self.organization_id,
-            workspace_id=self.workspace_id,
-            agent_name=self.agent_name,
+            attributes=self.value_attributes,
         )
-        self.actions = ActionEmitter(tracer=self._tracer)
+        self.actions_emitter = ActionEmitter(tracer=self._tracer)
 
 
 def initialize_sync(service_name: str = "value-control-agent") -> ValueClient:
