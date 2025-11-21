@@ -24,7 +24,7 @@ class ActionEmitter:
         self._tracer = tracer
 
     def send(
-        self, action_name: str, user_id: Optional[str] = None, anonymous_id: Optional[str] = None, **kwargs: Any
+        self, action_name: str, anonymous_id: str, user_id: Optional[str] = None, **kwargs: Any
     ) -> None:
         """
         Send an action immediately as an OpenTelemetry span.
@@ -36,8 +36,8 @@ class ActionEmitter:
 
         Args:
             action_name: Name of the action
-            user_id: User ID (required if not in a start() context)
             anonymous_id: Anonymous ID (required if not in a start() context)
+            user_id: User ID (optional)
             **kwargs: Additional attributes for the action
         """
         current_span = _current_action_span.get()
@@ -45,23 +45,23 @@ class ActionEmitter:
         if current_span:
             self._send_action(
                 action_name=action_name,
-                user_id=current_span._user_id,
                 anonymous_id=current_span._anonymous_id,
+                user_id=current_span._user_id,
                 **kwargs,
             )
         else:
-            self._send_action(action_name=action_name, user_id=user_id, anonymous_id=anonymous_id, **kwargs)
+            self._send_action(action_name=action_name, anonymous_id=anonymous_id, user_id=user_id, **kwargs)
 
     def _send_action(
-        self, action_name: str, user_id: Optional[str] = None, anonymous_id: Optional[str] = None, **kwargs: Any
+        self, action_name: str, anonymous_id: str, user_id: Optional[str] = None, **kwargs: Any
     ) -> None:
         """
         Internal method to send an action.
 
         Args:
             action_name: Name of the action
-            user_id: User ID for the action
             anonymous_id: Anonymous ID for the action
+            user_id: User ID for the action
             **kwargs: Additional attributes for the action
         """
         standard_attrs = {}
@@ -88,15 +88,15 @@ class ActionSpan:
     """Context manager for action spans that allows sending actions within the context."""
 
     def __init__(
-        self, emitter: ActionEmitter, user_id: Optional[str] = None, anonymous_id: Optional[str] = None, **kwargs: Any
+        self, emitter: ActionEmitter, anonymous_id: str, user_id: Optional[str] = None, **kwargs: Any
     ):
         """
         Initialize an action span context.
 
         Args:
             emitter: The ActionEmitter instance
-            user_id: User ID for the action context
             anonymous_id: Anonymous ID for the action context
+            user_id: User ID for the action context
             **kwargs: Additional attributes for the span
         """
         self._emitter = emitter
@@ -131,4 +131,4 @@ class ActionSpan:
             **kwargs: Additional attributes for the action
         """
         self._action_sent = True
-        self._emitter.send(action_name=action_name, user_id=self._user_id, anonymous_id=self._anonymous_id, **kwargs)
+        self._emitter.send(action_name=action_name, anonymous_id=self._anonymous_id, user_id=self._user_id, **kwargs)

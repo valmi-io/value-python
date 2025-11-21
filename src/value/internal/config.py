@@ -16,8 +16,7 @@ class SDKConfig:
     enable_console_export: bool = False
 
     def __post_init__(self) -> None:
-        if not self.secret:
-            raise ValueError("Agent secret is required")
+        pass
 
 
 def load_config_from_env() -> SDKConfig:

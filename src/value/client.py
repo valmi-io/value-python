@@ -15,16 +15,20 @@ class AsyncValueClient:
     def __init__(
         self,
         service_name: str = "value-control-agent",
+        secret: Optional[str] = None,
+        otel_endpoint: Optional[str] = None,
+        backend_url: Optional[str] = None,
+        enable_console_export: bool = False,
     ):
         config = load_config_from_env()
-        if not config.secret:
+        self.secret = secret or config.secret
+        if not self.secret:
             raise ValueError("Agent secret must be provided.")
 
-        self.secret = config.secret
-        self._otel_endpoint = config.otel_endpoint
+        self._otel_endpoint = otel_endpoint or config.otel_endpoint
         self._service_name = service_name
-        self._backend_url = config.backend_url
-        self._enable_console_export = config.enable_console_export
+        self._backend_url = backend_url or config.backend_url
+        self._enable_console_export = enable_console_export or config.enable_console_export
 
         # Setup internal API client
         self._api_client = ValueControlPlaneAPI(secret=self.secret, base_url=self._backend_url)
@@ -46,11 +50,11 @@ class AsyncValueClient:
     def tracer(self) -> Optional[trace.Tracer]:
         return self._tracer
 
-    def action_span(self, user_id: Optional[str] = None, anonymous_id: Optional[str] = None, **kwargs: Any) -> Any:
+    def action_span(self, anonymous_id: str, user_id: Optional[str] = None, **kwargs: Any) -> Any:
         """
         Create an action span context.
         """
-        return ActionSpan(emitter=self.actions_emitter, user_id=user_id, anonymous_id=anonymous_id, **kwargs)
+        return ActionSpan(emitter=self.actions_emitter, anonymous_id=anonymous_id, user_id=user_id, **kwargs)
 
     def action(self) -> ActionEmitter:
         return self.actions_emitter
@@ -59,8 +63,7 @@ class AsyncValueClient:
         """
         Initialize tracer, actions_emitter, and fetch agent context (organization, workspace, agent name) from backend.
         """
-        # agent_info = await self._api_client.get_agent_info()
-        agent_info = {}
+        agent_info = await self._api_client.get_agent_info()
         self.organization_id = agent_info.get("organization_id", "unknown")
         self.workspace_id = agent_info.get("workspace_id", "unknown")
         self.agent_name = agent_info.get("name", "unknown")
@@ -87,16 +90,20 @@ class ValueClient:
     def __init__(
         self,
         service_name: str = "value-control-agent",
+        secret: Optional[str] = None,
+        otel_endpoint: Optional[str] = None,
+        backend_url: Optional[str] = None,
+        enable_console_export: bool = False,
     ):
         config = load_config_from_env()
-        if not config.secret:
+        self.secret = secret or config.secret
+        if not self.secret:
             raise ValueError("Agent secret must be provided.")
 
-        self.secret = config.secret
-        self._otel_endpoint = config.otel_endpoint
+        self._otel_endpoint = otel_endpoint or config.otel_endpoint
         self._service_name = service_name
-        self._backend_url = config.backend_url
-        self._enable_console_export = config.enable_console_export
+        self._backend_url = backend_url or config.backend_url
+        self._enable_console_export = enable_console_export or config.enable_console_export
 
         # Setup internal API client (sync version)
         self._api_client = SyncValueControlPlaneAPI(secret=self.secret, base_url=self._backend_url)
@@ -118,11 +125,11 @@ class ValueClient:
     def tracer(self) -> Optional[trace.Tracer]:
         return self._tracer
 
-    def action_span(self, user_id: Optional[str] = None, anonymous_id: Optional[str] = None, **kwargs: Any) -> Any:
+    def action_span(self, anonymous_id: str, user_id: Optional[str] = None, **kwargs: Any) -> Any:
         """
         Create an action span context.
         """
-        return ActionSpan(emitter=self.actions_emitter, user_id=user_id, anonymous_id=anonymous_id, **kwargs)
+        return ActionSpan(emitter=self.actions_emitter, anonymous_id=anonymous_id, user_id=user_id, **kwargs)
 
     def action(self) -> ActionEmitter:
         return self.actions_emitter
@@ -131,8 +138,7 @@ class ValueClient:
         """
         Initialize tracer, actions_emitter, and fetch agent context (organization, workspace, agent name) from backend.
         """
-        # agent_info = self._api_client.get_agent_info()
-        agent_info = {}
+        agent_info = self._api_client.get_agent_info()
         self.organization_id = agent_info.get("organization_id", "unknown")
         self.workspace_id = agent_info.get("workspace_id", "unknown")
         self.agent_name = agent_info.get("name", "unknown")

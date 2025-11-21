@@ -1,6 +1,7 @@
 """Tests for the SDK client."""
 
 import pytest
+from unittest.mock import MagicMock, patch, AsyncMock
 from value import AsyncValueClient, ValueClient
 
 
@@ -9,6 +10,15 @@ async def test_async_sdk_initialization() -> None:
     """Test async SDK client initialization."""
     sdk = AsyncValueClient(secret="test-secret")
     assert sdk.secret == "test-secret"
+
+    # Mock the API client
+    sdk._api_client.get_agent_info = AsyncMock(return_value={
+        "organization_id": "org_1",
+        "workspace_id": "ws_1",
+        "name": "agent_1",
+        "agent_id": "agent_1"
+    })
+
     await sdk.initialize()
     assert sdk.actions_emitter is not None
     assert sdk.tracer is not None
@@ -18,6 +28,15 @@ def test_sync_sdk_initialization() -> None:
     """Test sync SDK client initialization."""
     sdk = ValueClient(secret="test-secret")
     assert sdk.secret == "test-secret"
+
+    # Mock the API client
+    sdk._api_client.get_agent_info = MagicMock(return_value={
+        "organization_id": "org_1",
+        "workspace_id": "ws_1",
+        "name": "agent_1",
+        "agent_id": "agent_1"
+    })
+
     sdk.initialize()
     assert sdk.actions_emitter is not None
     assert sdk.tracer is not None
@@ -25,8 +44,9 @@ def test_sync_sdk_initialization() -> None:
 
 def test_sdk_requires_secret() -> None:
     """Test that SDK requires a secret."""
-    with pytest.raises(ValueError, match="Agent secret must be provided"):
-        AsyncValueClient(secret="")
+    with patch.dict("os.environ", {}, clear=True):
+        with pytest.raises(ValueError, match="Agent secret must be provided"):
+            AsyncValueClient(secret="")
 
 
 def test_custom_endpoints() -> None:
@@ -44,16 +64,38 @@ def test_custom_endpoints() -> None:
 async def test_action_emitter() -> None:
     """Test custom action creation."""
     sdk = AsyncValueClient(secret="test-secret")
+
+    # Mock the API client
+    sdk._api_client.get_agent_info = AsyncMock(return_value={})
+
     await sdk.initialize()
 
     # Test sending action without context
     sdk.action().send(
         action_name="test_action",
-        user_id="user123",
         anonymous_id="anon456",
+        user_id="user123",
         **{"value.action.description": "Test action"}
     )
 
     # Test sending action within context
-    with sdk.action_span(user_id="user123", anonymous_id="anon456") as action_span:
+    with sdk.action_span(anonymous_id="anon456", user_id="user123") as action_span:
         action_span.send(action_name="test_action_2", **{"value.action.description": "Test action 2"})
+
+
+def test_anonymous_id_required() -> None:
+    """Test that anonymous_id is required."""
+    sdk = ValueClient(secret="test-secret")
+
+    # Mock the API client
+    sdk._api_client.get_agent_info = MagicMock(return_value={})
+
+    sdk.initialize()
+
+    # Test action_span requires anonymous_id
+    with pytest.raises(TypeError):
+        sdk.action_span(user_id="user123")
+
+    # Test send requires anonymous_id
+    with pytest.raises(TypeError):
+        sdk.action().send(action_name="test_action", user_id="user123")
