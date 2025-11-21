@@ -67,7 +67,7 @@ class AsyncValueClient:
         self.organization_id = agent_info.get("organization_id", "unknown")
         self.workspace_id = agent_info.get("workspace_id", "unknown")
         self.agent_name = agent_info.get("name", "unknown")
-        self.agent_id = agent_info.get("agent_id", "unknown")
+        self.agent_id = agent_info.get("id", "unknown")
         self.value_attributes = {
             "value.agent.organization_id": self.organization_id,
             "value.agent.workspace_id": self.workspace_id,
@@ -142,7 +142,7 @@ class ValueClient:
         self.organization_id = agent_info.get("organization_id", "unknown")
         self.workspace_id = agent_info.get("workspace_id", "unknown")
         self.agent_name = agent_info.get("name", "unknown")
-        self.agent_id = agent_info.get("agent_id", "unknown")
+        self.agent_id = agent_info.get("id", "unknown")
 
         self.value_attributes = {
             "value.agent.organization_id": self.organization_id,
