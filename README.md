@@ -1,7 +1,7 @@
 # Value Python SDK
 
 [![PyPI version](https://badge.fury.io/py/value-python.svg)](https://badge.fury.io/py/value-python)
-[![CI](https://github.com/ValmiIO/value-python/actions/workflows/ci.yml/badge.svg)](https://github.com/ValmiIO/value-python/actions/workflows/ci.yml)
+[![CI](https://github.com/valmi-io/value-python/actions/workflows/ci.yml/badge.svg)](https://github.com/valmi-io/value-python/actions/workflows/ci.yml)
 [![Python Versions](https://img.shields.io/pypi/pyversions/value-python.svg)](https://pypi.org/project/value-python/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -179,7 +179,7 @@ Configure the SDK using environment variables:
 
 ```bash
 # Clone the repository
-git clone https://github.com/ValmiIO/value-python.git
+git clone https://github.com/valmi-io/value-python.git
 cd value-python
 
 # Install dependencies
@@ -242,6 +242,6 @@ Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md)
 
 ## Links
 
-- [Documentation](https://github.com/ValmiIO/value-python#readme)
+- [Documentation](https://github.com/valmi-io/value-python#readme)
 - [PyPI Package](https://pypi.org/project/value-python/)
-- [Issue Tracker](https://github.com/ValmiIO/value-python/issues)
+- [Issue Tracker](https://github.com/valmi-io/value-python/issues)

@@ -31,10 +31,10 @@ classifiers = [
 ]
 
 [tool.poetry.urls]
-Homepage = "https://github.com/ValmiIO/value-python"
-Documentation = "https://github.com/ValmiIO/value-python#readme"
-Repository = "https://github.com/ValmiIO/value-python"
-Issues = "https://github.com/ValmiIO/value-python/issues"
+Homepage = "https://github.com/valmi-io/value-python"
+Documentation = "https://github.com/valmi-io/value-python#readme"
+Repository = "https://github.com/valmi-io/value-python"
+Issues = "https://github.com/valmi-io/value-python/issues"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.14"
