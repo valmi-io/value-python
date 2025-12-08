@@ -12,7 +12,7 @@ _anonymous_id_context: ContextVar[Optional[str]] = ContextVar("_anonymous_id_con
 class UserContextSpanProcessor(SpanProcessor):
     """
     Span processor that adds user_id and anonymous_id attributes to all spans
-    created within an action_span context.
+    created within an action_context.
     """
 
     def on_start(self, span: ReadableSpan, parent_context: Optional[Context] = None) -> None:

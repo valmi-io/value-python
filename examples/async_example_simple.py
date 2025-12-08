@@ -18,8 +18,8 @@ async def main() -> None:
         await asyncio.sleep(0.5)
         result = data.upper()
 
-        with client.action_span(user_id="user123", anonymous_id="anon456") as action_span:
-            action_span.send(
+        with client.action_context(user_id="user123", anonymous_id="anon456") as ctx:
+            ctx.send(
                 action_name="transform_data",
                 **{
                     "value.action.description": f"Transformed data from {len(data)} to {len(result)} characters",
@@ -41,9 +41,9 @@ if __name__ == "__main__":
     print("=" * 50)
     print("Value SDK Async Example (Simplified)")
     print("=" * 50)
-    print("\nThis example uses the action span context:")
-    print("  with client.action_span(user_id, anonymous_id) as action_span:")
-    print("      action_span.send(action_name, **kwargs)")
+    print("\nThis example uses the action context:")
+    print("  with client.action_context(user_id, anonymous_id) as ctx:")
+    print("      ctx.send(action_name, **kwargs)")
     print("\nNote: Make sure you have an OpenTelemetry collector running:")
     print("  docker run -p 4317:4317 otel/opentelemetry-collector:latest\n")
 

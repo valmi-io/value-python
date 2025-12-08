@@ -24,8 +24,8 @@ async def main():
         print(f"Processing data: {data}")
         await asyncio.sleep(0.5)
         result = data.upper()
-        with client.action_span(user_id="user123", anonymous_id="anon456") as action_span:
-            action_span.send(
+        with client.action_context(user_id="user123", anonymous_id="anon456") as ctx:
+            ctx.send(
                 action_name="transform_data",
                 **{"value.action.description": f"Transformed data from {len(data)} to {len(result)} characters"}
             )

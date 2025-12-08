@@ -20,10 +20,10 @@ prompt = "Write a short, fun poem about tracing."
 print(f"\nMaking call to {model}...")
 
 try:
-    with value_client.action_span(user_id="user123", anonymous_id="anon456") as action_span:
+    with value_client.action_context(user_id="user123", anonymous_id="anon456") as ctx:
         response = gemini_client.models.generate_content(model=model, contents=[prompt])
 
-        action_span.send(
+        ctx.send(
             action_name="process_gemini_response",
             **{
                 "value.action.description": f"Received response from {model} with {len(response.text)} characters",

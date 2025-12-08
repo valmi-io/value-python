@@ -4,7 +4,7 @@ from typing import Optional, Any
 from opentelemetry import trace
 
 from .internal.tracing import initialize_tracing
-from .internal.actions import ActionEmitter, ActionSpan
+from .internal.actions import ActionEmitter, ActionContext
 from .internal._api import ValueControlPlaneAPI, SyncValueControlPlaneAPI
 from .internal.config import load_config_from_env
 
@@ -50,11 +50,11 @@ class AsyncValueClient:
     def tracer(self) -> Optional[trace.Tracer]:
         return self._tracer
 
-    def action_span(self, anonymous_id: str, user_id: Optional[str] = None, **kwargs: Any) -> Any:
+    def action_context(self, anonymous_id: str, user_id: Optional[str] = None, **kwargs: Any) -> Any:
         """
-        Create an action span context.
+        Create an action context for sending multiple actions.
         """
-        return ActionSpan(emitter=self.actions_emitter, anonymous_id=anonymous_id, user_id=user_id, **kwargs)
+        return ActionContext(emitter=self.actions_emitter, anonymous_id=anonymous_id, user_id=user_id, **kwargs)
 
     def action(self) -> ActionEmitter:
         return self.actions_emitter
@@ -125,11 +125,11 @@ class ValueClient:
     def tracer(self) -> Optional[trace.Tracer]:
         return self._tracer
 
-    def action_span(self, anonymous_id: str, user_id: Optional[str] = None, **kwargs: Any) -> Any:
+    def action_context(self, anonymous_id: str, user_id: Optional[str] = None, **kwargs: Any) -> Any:
         """
-        Create an action span context.
+        Create an action context for sending multiple actions.
         """
-        return ActionSpan(emitter=self.actions_emitter, anonymous_id=anonymous_id, user_id=user_id, **kwargs)
+        return ActionContext(emitter=self.actions_emitter, anonymous_id=anonymous_id, user_id=user_id, **kwargs)
 
     def action(self) -> ActionEmitter:
         return self.actions_emitter

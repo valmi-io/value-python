@@ -12,12 +12,9 @@ async def test_async_sdk_initialization() -> None:
     assert sdk.secret == "test-secret"
 
     # Mock the API client
-    sdk._api_client.get_agent_info = AsyncMock(return_value={
-        "organization_id": "org_1",
-        "workspace_id": "ws_1",
-        "name": "agent_1",
-        "agent_id": "agent_1"
-    })
+    sdk._api_client.get_agent_info = AsyncMock(
+        return_value={"organization_id": "org_1", "workspace_id": "ws_1", "name": "agent_1", "agent_id": "agent_1"}
+    )
 
     await sdk.initialize()
     assert sdk.actions_emitter is not None
@@ -30,12 +27,9 @@ def test_sync_sdk_initialization() -> None:
     assert sdk.secret == "test-secret"
 
     # Mock the API client
-    sdk._api_client.get_agent_info = MagicMock(return_value={
-        "organization_id": "org_1",
-        "workspace_id": "ws_1",
-        "name": "agent_1",
-        "agent_id": "agent_1"
-    })
+    sdk._api_client.get_agent_info = MagicMock(
+        return_value={"organization_id": "org_1", "workspace_id": "ws_1", "name": "agent_1", "agent_id": "agent_1"}
+    )
 
     sdk.initialize()
     assert sdk.actions_emitter is not None
@@ -75,12 +69,12 @@ async def test_action_emitter() -> None:
         action_name="test_action",
         anonymous_id="anon456",
         user_id="user123",
-        **{"value.action.description": "Test action"}
+        **{"value.action.description": "Test action"},
     )
 
     # Test sending action within context
-    with sdk.action_span(anonymous_id="anon456", user_id="user123") as action_span:
-        action_span.send(action_name="test_action_2", **{"value.action.description": "Test action 2"})
+    with sdk.action_context(anonymous_id="anon456", user_id="user123") as ctx:
+        ctx.send(action_name="test_action_2", **{"value.action.description": "Test action 2"})
 
 
 def test_anonymous_id_required() -> None:
@@ -92,9 +86,9 @@ def test_anonymous_id_required() -> None:
 
     sdk.initialize()
 
-    # Test action_span requires anonymous_id
+    # Test action_context requires anonymous_id
     with pytest.raises(TypeError):
-        sdk.action_span(user_id="user123")
+        sdk.action_context(user_id="user123")
 
     # Test send requires anonymous_id
     with pytest.raises(TypeError):
