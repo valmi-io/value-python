@@ -1,6 +1,7 @@
 """Tests for configuration."""
 
 import pytest
+
 from value.internal.config import SDKConfig
 
 

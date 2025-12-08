@@ -1,11 +1,13 @@
 """Action emitter for creating custom OpenTelemetry spans."""
 
 import json
-from typing import Optional, Any
 from contextvars import ContextVar
+from typing import Any, Optional
+
 from opentelemetry import trace
+
 from .config import VALUE_ACTION_ATTRIBUTES
-from .span_processor import set_user_context, reset_user_context
+from .span_processor import reset_user_context, set_user_context
 
 _current_action_context: ContextVar[Optional["ActionContext"]] = ContextVar("_current_action_context", default=None)
 

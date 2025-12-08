@@ -1,6 +1,7 @@
 """Internal API client for Value Control Plane backend."""
 
-from typing import Dict, Any, Optional
+from typing import Any, Optional
+
 import httpx
 
 
@@ -28,7 +29,7 @@ class ValueControlPlaneAPI:
             "Content-Type": "application/json",
         }
 
-    async def get_agent_info(self) -> Dict[str, Any]:
+    async def get_agent_info(self) -> dict[str, Any]:
         """
         Fetch agent context information (organization, workspace, etc.).
 
@@ -71,7 +72,7 @@ class SyncValueControlPlaneAPI:
             "Content-Type": "application/json",
         }
 
-    def get_agent_info(self) -> Dict[str, Any]:
+    def get_agent_info(self) -> dict[str, Any]:
         """
         Fetch agent context information (organization, workspace, etc.).
 

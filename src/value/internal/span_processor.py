@@ -2,8 +2,9 @@
 
 from contextvars import ContextVar
 from typing import Optional
-from opentelemetry.sdk.trace import SpanProcessor, ReadableSpan
+
 from opentelemetry.context import Context
+from opentelemetry.sdk.trace import ReadableSpan, SpanProcessor
 
 _user_id_context: ContextVar[Optional[str]] = ContextVar("_user_id_context", default=None)
 _anonymous_id_context: ContextVar[Optional[str]] = ContextVar("_anonymous_id_context", default=None)
