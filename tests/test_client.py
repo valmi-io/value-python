@@ -15,7 +15,12 @@ async def test_async_sdk_initialization() -> None:
 
     # Mock the API client
     sdk._api_client.get_agent_info = AsyncMock(
-        return_value={"organization_id": "org_1", "workspace_id": "ws_1", "name": "agent_1", "agent_id": "agent_1"}
+        return_value={
+            "organization_id": "org_1",
+            "workspace_id": "ws_1",
+            "name": "agent_1",
+            "agent_id": "agent_1",
+        }
     )
 
     await sdk.initialize()
@@ -30,7 +35,12 @@ def test_sync_sdk_initialization() -> None:
 
     # Mock the API client
     sdk._api_client.get_agent_info = MagicMock(
-        return_value={"organization_id": "org_1", "workspace_id": "ws_1", "name": "agent_1", "agent_id": "agent_1"}
+        return_value={
+            "organization_id": "org_1",
+            "workspace_id": "ws_1",
+            "name": "agent_1",
+            "agent_id": "agent_1",
+        }
     )
 
     sdk.initialize()

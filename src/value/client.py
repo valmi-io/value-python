@@ -52,18 +52,19 @@ class AsyncValueClient:
         return self._tracer
 
     def action_context(self, anonymous_id: str, user_id: Optional[str] = None, **kwargs: Any) -> Any:
-        """
-        Create an action context for sending multiple actions.
-        """
-        return ActionContext(emitter=self.actions_emitter, anonymous_id=anonymous_id, user_id=user_id, **kwargs)
+        """Create an action context for sending multiple actions."""
+        return ActionContext(
+            emitter=self.actions_emitter,
+            anonymous_id=anonymous_id,
+            user_id=user_id,
+            **kwargs,
+        )
 
     def action(self) -> ActionEmitter:
         return self.actions_emitter
 
-    async def initialize(self):
-        """
-        Initialize tracer, actions_emitter, and fetch agent context (organization, workspace, agent name) from backend.
-        """
+    async def initialize(self) -> None:
+        """Initialize tracer, actions_emitter, and fetch agent context from backend."""
         agent_info = await self._api_client.get_agent_info()
         self.organization_id = agent_info.get("organization_id", "unknown")
         self.workspace_id = agent_info.get("workspace_id", "unknown")
@@ -127,18 +128,19 @@ class ValueClient:
         return self._tracer
 
     def action_context(self, anonymous_id: str, user_id: Optional[str] = None, **kwargs: Any) -> Any:
-        """
-        Create an action context for sending multiple actions.
-        """
-        return ActionContext(emitter=self.actions_emitter, anonymous_id=anonymous_id, user_id=user_id, **kwargs)
+        """Create an action context for sending multiple actions."""
+        return ActionContext(
+            emitter=self.actions_emitter,
+            anonymous_id=anonymous_id,
+            user_id=user_id,
+            **kwargs,
+        )
 
     def action(self) -> ActionEmitter:
         return self.actions_emitter
 
-    def initialize(self):
-        """
-        Initialize tracer, actions_emitter, and fetch agent context (organization, workspace, agent name) from backend.
-        """
+    def initialize(self) -> None:
+        """Initialize tracer, actions_emitter, and fetch agent context from backend."""
         agent_info = self._api_client.get_agent_info()
         self.organization_id = agent_info.get("organization_id", "unknown")
         self.workspace_id = agent_info.get("workspace_id", "unknown")

@@ -24,7 +24,13 @@ class ActionEmitter:
         """
         self._tracer = tracer
 
-    def send(self, action_name: str, anonymous_id: str, user_id: Optional[str] = None, **kwargs: Any) -> None:
+    def send(
+        self,
+        action_name: str,
+        anonymous_id: str,
+        user_id: Optional[str] = None,
+        **kwargs: Any,
+    ) -> None:
         """
         Send an action immediately as an OpenTelemetry span.
 
@@ -49,9 +55,20 @@ class ActionEmitter:
                 **kwargs,
             )
         else:
-            self._send_action(action_name=action_name, anonymous_id=anonymous_id, user_id=user_id, **kwargs)
+            self._send_action(
+                action_name=action_name,
+                anonymous_id=anonymous_id,
+                user_id=user_id,
+                **kwargs,
+            )
 
-    def _send_action(self, action_name: str, anonymous_id: str, user_id: Optional[str] = None, **kwargs: Any) -> None:
+    def _send_action(
+        self,
+        action_name: str,
+        anonymous_id: str,
+        user_id: Optional[str] = None,
+        **kwargs: Any,
+    ) -> None:
         """
         Internal method to send an action.
 
@@ -82,9 +99,15 @@ class ActionEmitter:
 
 
 class ActionContext:
-    """Context manager for action contexts that allows sending multiple actions within the context."""
+    """Context manager for action contexts that allows sending multiple actions."""
 
-    def __init__(self, emitter: ActionEmitter, anonymous_id: str, user_id: Optional[str] = None, **kwargs: Any):
+    def __init__(
+        self,
+        emitter: ActionEmitter,
+        anonymous_id: str,
+        user_id: Optional[str] = None,
+        **kwargs: Any,
+    ):
         """
         Initialize an action context.
 
@@ -125,4 +148,9 @@ class ActionContext:
             **kwargs: Additional attributes for the action
         """
         self._action_sent = True
-        self._emitter.send(action_name=action_name, anonymous_id=self._anonymous_id, user_id=self._user_id, **kwargs)
+        self._emitter.send(
+            action_name=action_name,
+            anonymous_id=self._anonymous_id,
+            user_id=self._user_id,
+            **kwargs,
+        )

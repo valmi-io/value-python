@@ -1,14 +1,6 @@
 """Tests for configuration."""
 
-import pytest
-
 from value.internal.config import SDKConfig
-
-
-def test_config_requires_secret() -> None:
-    """Test that config requires a secret."""
-    with pytest.raises(ValueError, match="Agent secret is required"):
-        SDKConfig(secret="")
 
 
 def test_config_with_defaults() -> None:
@@ -18,3 +10,9 @@ def test_config_with_defaults() -> None:
     assert config.otel_endpoint == "http://localhost:4317"
     assert config.service_name == "value-control-agent"
     assert config.enable_console_export is False
+
+
+def test_config_allows_empty_secret() -> None:
+    """Test that config allows empty secret (validation is done in client)."""
+    config = SDKConfig(secret="")
+    assert config.secret == ""
