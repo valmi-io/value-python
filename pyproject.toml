@@ -1,12 +1,20 @@
 [tool.poetry]
 name = "value-python"
-version = "0.1.0"
-description = "OpenTelemetry-based Python SDK for AI agent observability and control"
+version = "0.1.1"
+description = "Python SDK to track AI agents with Value actions and auto-instrument LLM calls (Gemini, LangChain)"
 authors = ["srinivas <srinivas@valmi.io>"]
 readme = "README.md"
 license = "MIT"
 packages = [{ include = "value", from = "src" }]
-keywords = ["opentelemetry", "observability", "tracing", "ai", "agents", "genai", "llm"]
+keywords = [
+    "opentelemetry",
+    "observability",
+    "tracing",
+    "ai",
+    "agents",
+    "genai",
+    "llm",
+]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -48,15 +56,10 @@ opentelemetry-instrumentation-langchain = { version = ">=0.47.0", optional = tru
 
 [tool.poetry.extras]
 # Google GenAI auto-instrumentation
-genai = [
-    "opentelemetry-instrumentation-google-generativeai",
-    "google-genai",
-]
+genai = ["opentelemetry-instrumentation-google-generativeai", "google-genai"]
 
 # LangChain auto-instrumentation
-langchain = [
-    "opentelemetry-instrumentation-langchain",
-]
+langchain = ["opentelemetry-instrumentation-langchain"]
 
 # All auto-instrumentation libraries
 all = [

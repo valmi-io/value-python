@@ -5,7 +5,13 @@
 [![Python Versions](https://img.shields.io/pypi/pyversions/value-python.svg)](https://pypi.org/project/value-python/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-OpenTelemetry-based Python SDK for AI agent observability and control.
+Python SDK to track AI agents with Value actions and auto-instrument LLM calls (Gemini, LangChain).
+
+## Features
+
+- **Value Actions**: Track agent behavior using `action_context` with `user_id` and `anonymous_id`, send custom actions via `ctx.send()`
+- **Auto-Instrumentation**: Automatically capture LLM calls from Gemini and LangChain with zero code changes
+- **OpenTelemetry-Based**: Built on OpenTelemetry for standardized, vendor-neutral observability
 
 ## Installation
 
@@ -69,7 +75,7 @@ async def main():
         print(f"Processing data: {data}")
         await asyncio.sleep(0.5)
         result = data.upper()
-        
+
         with client.action_context(user_id="user123", anonymous_id="anon456") as ctx:
             ctx.send(
                 action_name="transform_data",
@@ -136,20 +142,20 @@ print(response.text)
 
 Configure the SDK using environment variables:
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `VALUE_AGENT_SECRET` | Agent authentication secret | Required |
-| `VALUE_OTEL_ENDPOINT` | OpenTelemetry collector endpoint | `http://localhost:4317` |
-| `VALUE_BACKEND_URL` | Value Control Plane backend URL | Required |
-| `VALUE_SERVICE_NAME` | Service name for OpenTelemetry resource | `value-control-agent` |
-| `VALUE_CONSOLE_EXPORT` | Enable console span exporter for debugging | `false` |
+| Variable               | Description                                | Default                 |
+| ---------------------- | ------------------------------------------ | ----------------------- |
+| `VALUE_AGENT_SECRET`   | Agent authentication secret                | Required                |
+| `VALUE_OTEL_ENDPOINT`  | OpenTelemetry collector endpoint           | `http://localhost:4317` |
+| `VALUE_BACKEND_URL`    | Value Control Plane backend URL            | Required                |
+| `VALUE_SERVICE_NAME`   | Service name for OpenTelemetry resource    | `value-control-agent`   |
+| `VALUE_CONSOLE_EXPORT` | Enable console span exporter for debugging | `false`                 |
 
 ## Supported Auto-Instrumentation Libraries
 
-| Library | Extra | Instrumentor |
-|---------|-------|--------------|
-| Google Generative AI (Gemini) | `genai` | `opentelemetry-instrumentation-google-generativeai` |
-| LangChain | `langchain` | `opentelemetry-instrumentation-langchain` |
+| Library                       | Extra       | Instrumentor                                        |
+| ----------------------------- | ----------- | --------------------------------------------------- |
+| Google Generative AI (Gemini) | `genai`     | `opentelemetry-instrumentation-google-generativeai` |
+| LangChain                     | `langchain` | `opentelemetry-instrumentation-langchain`           |
 
 ## API Reference
 
