@@ -37,19 +37,44 @@ jobs:
           path: .venv
           key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
-      - name: Install dependencies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+      - name: Install dependencies (Unix)
+        if: runner.os != 'Windows' && steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
 
-      - name: Install project
+      - name: Install dependencies (Windows)
+        if: runner.os == 'Windows' && steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        shell: bash
+        run: poetry install --no-interaction --no-root
+
+      - name: Install project (Unix)
+        if: runner.os != 'Windows'
         run: poetry install --no-interaction
 
-      - name: Run linting
+      - name: Install project (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: poetry install --no-interaction
+
+      - name: Run linting (Unix)
+        if: runner.os != 'Windows'
         run: |
           poetry run ruff check src/ tests/
           poetry run black --check src/ tests/
 
-      - name: Run tests
+      - name: Run linting (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          poetry run ruff check src/ tests/
+          poetry run black --check src/ tests/
+
+      - name: Run tests (Unix)
+        if: runner.os != 'Windows'
+        run: poetry run pytest --cov=value --cov-report=term-missing
+
+      - name: Run tests (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
         run: poetry run pytest --cov=value --cov-report=term-missing
 
   test-extras:
