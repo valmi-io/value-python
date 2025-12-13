@@ -1,6 +1,6 @@
 """Tests for the SDK client."""
 
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
@@ -49,10 +49,10 @@ def test_sync_sdk_initialization() -> None:
 
 
 def test_sdk_requires_secret() -> None:
-    """Test that SDK requires a secret."""
-    with patch.dict("os.environ", {}, clear=True):
-        with pytest.raises(ValueError, match="Agent secret must be provided"):
-            AsyncValueClient(secret="")
+    """Test that SDK requires a secret (positional argument)."""
+    # secret is now a required positional argument, so calling without it raises TypeError
+    with pytest.raises(TypeError):
+        AsyncValueClient()  # type: ignore
 
 
 def test_custom_endpoints() -> None:
