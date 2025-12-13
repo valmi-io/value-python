@@ -1,16 +1,19 @@
 """Synchronous example demonstrating the Value SDK usage."""
 
-from dotenv import load_dotenv
 import os
+import time
+from dotenv import load_dotenv
 
 load_dotenv()
 
-import time
 from value import initialize_sync
+
+# Get agent secret from environment variable
+AGENT_SECRET = os.getenv("VALUE_AGENT_SECRET", "your-agent-secret")
 
 
 def main() -> None:
-    client = initialize_sync()
+    client = initialize_sync(agent_secret=AGENT_SECRET)
 
     def process_data(data: str) -> str:
         """Process data with tracing."""

@@ -69,7 +69,8 @@ import asyncio
 from value import initialize_async
 
 async def main():
-    client = await initialize_async()
+    # agent_secret is required
+    client = await initialize_async(agent_secret="your-agent-secret")
 
     async def process_data(data: str) -> str:
         print(f"Processing data: {data}")
@@ -94,9 +95,10 @@ asyncio.run(main())
 ```python
 from value import initialize_sync
 
-client = initialize_sync()
+# agent_secret is required
+client = initialize_sync(agent_secret="your-agent-secret")
 
-with client.action_context(user_id="user123") as ctx:
+with client.action_context(user_id="user123", anonymous_id="anon456") as ctx:
     # Your code here
     ctx.send(action_name="my_action", **{"custom.attribute": "value"})
 ```
@@ -108,8 +110,8 @@ Enable automatic tracing for supported AI libraries:
 ```python
 from value import initialize_sync, auto_instrument
 
-# Initialize the client
-client = initialize_sync()
+# Initialize the client with agent_secret
+client = initialize_sync(agent_secret="your-agent-secret")
 
 # Auto-instrument specific libraries
 auto_instrument(["gemini", "langchain"])
@@ -124,8 +126,8 @@ auto_instrument()
 from value import initialize_sync, auto_instrument
 from google import genai
 
-# Initialize Value client and auto-instrument
-client = initialize_sync()
+# Initialize Value client with agent_secret and auto-instrument
+client = initialize_sync(agent_secret="your-agent-secret")
 auto_instrument(["gemini"])
 
 # Use Gemini as usual - traces are automatically captured
@@ -140,11 +142,10 @@ print(response.text)
 
 ## Configuration
 
-Configure the SDK using environment variables:
+The `agent_secret` is passed directly to `initialize_sync()` or `initialize_async()`. Additional configuration can be set using environment variables:
 
 | Variable               | Description                                | Default                 |
 | ---------------------- | ------------------------------------------ | ----------------------- |
-| `VALUE_AGENT_SECRET`   | Agent authentication secret                | Required                |
 | `VALUE_OTEL_ENDPOINT`  | OpenTelemetry collector endpoint           | `http://localhost:4317` |
 | `VALUE_BACKEND_URL`    | Value Control Plane backend URL            | Required                |
 | `VALUE_SERVICE_NAME`   | Service name for OpenTelemetry resource    | `value-control-agent`   |
@@ -161,8 +162,8 @@ Configure the SDK using environment variables:
 
 ### Core Functions
 
-- `initialize_sync()` - Initialize a synchronous Value client
-- `initialize_async()` - Initialize an asynchronous Value client
+- `initialize_sync(agent_secret)` - Initialize a synchronous Value client
+- `initialize_async(agent_secret)` - Initialize an asynchronous Value client
 - `auto_instrument(libraries=None)` - Enable auto-instrumentation for specified libraries
 - `uninstrument(libraries=None)` - Disable auto-instrumentation
 - `get_supported_libraries()` - Get list of supported library names

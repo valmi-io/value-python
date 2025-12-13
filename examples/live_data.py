@@ -9,6 +9,7 @@ Simulates a pipeline of events running every 5 seconds:
 """
 
 import asyncio
+import os
 import random
 import uuid
 import time
@@ -21,6 +22,9 @@ load_dotenv()
 from value import initialize_async
 from opentelemetry import trace
 from opentelemetry.trace import Status, StatusCode
+
+# Get agent secret from environment variable
+AGENT_SECRET = os.getenv("VALUE_AGENT_SECRET", "your-agent-secret")
 
 # Synthetic data generators
 INVOICE_TYPES = ["invoice", "receipt", "bill", "purchase_order"]
@@ -253,7 +257,7 @@ class PipelineSimulator:
 
 async def main():
     print("Initializing Value SDK...")
-    client = await initialize_async()
+    client = await initialize_async(agent_secret=AGENT_SECRET)
     simulator = PipelineSimulator(client)
 
     print("Starting Live Data Simulation (Ctrl+C to stop)...")

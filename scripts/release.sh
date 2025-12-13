@@ -12,7 +12,7 @@ if [ -z "$VERSION" ]; then
     exit 1
 fi
 
-echo "🚀 Releasing version $VERSION..."
+echo "Releasing version $VERSION..."
 
 # Update version in pyproject.toml
 sed -i.bak "s/^version = \".*\"/version = \"$VERSION\"/" pyproject.toml && rm pyproject.toml.bak

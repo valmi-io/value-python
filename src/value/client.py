@@ -15,16 +15,14 @@ class AsyncValueClient:
 
     def __init__(
         self,
+        secret: str,
         service_name: str = "value-control-agent",
-        secret: Optional[str] = None,
         otel_endpoint: Optional[str] = None,
         backend_url: Optional[str] = None,
         enable_console_export: bool = False,
     ):
         config = load_config_from_env()
-        self.secret = secret or config.secret
-        if not self.secret:
-            raise ValueError("Agent secret must be provided.")
+        self.secret = secret
 
         self._otel_endpoint = otel_endpoint or config.otel_endpoint
         self._service_name = service_name
@@ -91,16 +89,14 @@ class ValueClient:
 
     def __init__(
         self,
+        secret: str,
         service_name: str = "value-control-agent",
-        secret: Optional[str] = None,
         otel_endpoint: Optional[str] = None,
         backend_url: Optional[str] = None,
         enable_console_export: bool = False,
     ):
         config = load_config_from_env()
-        self.secret = secret or config.secret
-        if not self.secret:
-            raise ValueError("Agent secret must be provided.")
+        self.secret = secret
 
         self._otel_endpoint = otel_endpoint or config.otel_endpoint
         self._service_name = service_name
@@ -163,21 +159,39 @@ class ValueClient:
         self.actions_emitter = ActionEmitter(tracer=self._tracer)
 
 
-def initialize_sync(service_name: str = "value-control-agent") -> ValueClient:
+def initialize_sync(
+    agent_secret: str,
+    service_name: str = "value-control-agent",
+) -> ValueClient:
     """
     Initialize and return a configured synchronous ValueClient instance.
-    Reads configuration from environment variables.
+
+    Args:
+        agent_secret: The agent secret for authentication (required).
+        service_name: The service name for OpenTelemetry resource.
+
+    Returns:
+        A configured ValueClient instance.
     """
-    client = ValueClient(service_name=service_name)
+    client = ValueClient(secret=agent_secret, service_name=service_name)
     client.initialize()
     return client
 
 
-async def initialize_async(service_name: str = "value-control-agent") -> AsyncValueClient:
+async def initialize_async(
+    agent_secret: str,
+    service_name: str = "value-control-agent",
+) -> AsyncValueClient:
     """
     Initialize and return a configured asynchronous AsyncValueClient instance.
-    Reads configuration from environment variables.
+
+    Args:
+        agent_secret: The agent secret for authentication (required).
+        service_name: The service name for OpenTelemetry resource.
+
+    Returns:
+        A configured AsyncValueClient instance.
     """
-    client = AsyncValueClient(service_name=service_name)
+    client = AsyncValueClient(secret=agent_secret, service_name=service_name)
     await client.initialize()
     return client

@@ -1,5 +1,5 @@
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -7,7 +7,10 @@ from value.instrumentation import auto_instrument
 from value import initialize_sync
 from google import genai
 
-value_client = initialize_sync()
+# Get agent secret from environment variable
+AGENT_SECRET = os.getenv("VALUE_AGENT_SECRET", "your-agent-secret")
+
+value_client = initialize_sync(agent_secret=AGENT_SECRET)
 auto_instrument(["gemini"])
 
 api_key = os.getenv("GOOGLE_API_KEY", "your-gemini-api-key-here")

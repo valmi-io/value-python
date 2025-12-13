@@ -1,15 +1,19 @@
 """Async example demonstrating the Value SDK usage."""
 
+import asyncio
+import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-import asyncio
 from value import initialize_async
+
+# Get agent secret from environment variable
+AGENT_SECRET = os.getenv("VALUE_AGENT_SECRET", "your-agent-secret")
 
 
 async def main() -> None:
-    client = await initialize_async()
+    client = await initialize_async(agent_secret=AGENT_SECRET)
 
     async def process_data(data: str) -> str:
         """Process data with tracing."""
