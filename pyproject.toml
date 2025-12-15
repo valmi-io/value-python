@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "value-python"
-version = "0.1.4"
+version = "0.1.5"
 description = "Python SDK to track AI agents with Value actions and auto-instrument LLM calls (Gemini, LangChain)"
 authors = ["srinivas <srinivas@valmi.io>"]
 readme = "README.md"
